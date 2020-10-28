@@ -25,4 +25,4 @@ RUN echo export PATH="\
     $PATH" >> ~/.bashrc && \
     echo "nvm use ${VERSION_NODE} 1> /dev/null" >> ~/.bashrc
 
-ENTRYPOINT [ "bash", "-c" ]
+ENTRYPOINT [ "bash" ]
