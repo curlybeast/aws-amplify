@@ -36,12 +36,14 @@ RUN npm install -g @aws-amplify/cli --verbose
 # Install Angular
 RUN npm install -g @angular/cli
 
-# Set environment
-
-
 # Open up ports to host machine shared by Angular
 EXPOSE 4200/tcp
+
+# Allow mounting .aws directory to avoid setting up new authentication with AWS.
+RUN mkdir -p ~/.aws
+VOLUME ~/.aws
 
 ENTRYPOINT [ "bash" ]
 
 # For manual steps after this, refer to README.md
+

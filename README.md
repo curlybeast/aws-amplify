@@ -14,19 +14,21 @@ At the time of writing, the [Amplify Console Custom Build Image documentation](h
 
 ## Building / Running Docker Image
 
-**IMPORTANT**: Make sure the `REAL_NAME` and `EMAIL_ADDRESS` are set correctly. This can be done by either changing the `Dockerfile` or by passing them in.
-
 Build with:
 
 ```
 $ docker build --build-arg NAME="Martyn Russell" --build-arg EMAIL="martyn.russell@company.com" .
 ```
 
+**IMPORTANT**: Make sure the `REAL_NAME` and `EMAIL_ADDRESS` are set correctly. This can be done by either changing the `Dockerfile` or by passing them in.
+
 This generates a hash which can be run with:
 
 ```
 $ docker run -it <hash>
 ```
+
+**IMPORTANT**: When using AWS credentials from the host machine, there is a volume (`~/.aws`) that can be mounted to allow for persistent configuration between containers.
 
 ## Amplify Setup
 
