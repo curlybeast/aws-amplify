@@ -1,28 +1,28 @@
-FROM amazonlinux:2
+FROM amazonlinux:2 AS core
 
-ENV VERSION_NODE=12.10.0
+# Set environment
+ENV NODE_VERSION=14.15.0
+ENV BASH_ENV="~/.bashrc"
+SHELL ["/bin/bash", "-c"]
 
-# Install Curl, Git, OpenSSL (AWS Amplify requirements) and tar (required to install hugo)
-RUN touch ~/.bashrc
-RUN yum -y update && \
-    yum -y install \
-    curl \
-    git \
-    openssl \
-    tar \
-    yum clean all && \
-    rm -rf /var/cache/yum
+RUN yum -y update
+RUN yum -y install curl git openssl tar unzip
+RUN yum -y install awscli
+
+# Get NVM (Node Version Manager, required to install Node)
+RUN echo "# Placeholder for npm" >> ~/.bashrc
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 
 # Install Node (AWS Amplify requirement)
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-RUN /bin/bash -c ". ~/.nvm/nvm.sh && \
-    nvm install $VERSION_NODE && nvm use $VERSION_NODE && \
-    nvm alias default node && nvm cache clear"
+RUN nvm install $NODE_VERSION
+RUN nvm use $NODE_VERSION
+RUN nvm alias default node
+RUN nvm cache clear
 
-# Configure environment
-RUN echo export PATH="\
-    /root/.nvm/versions/node/${VERSION_NODE}/bin:\
-    $PATH" >> ~/.bashrc && \
-    echo "nvm use ${VERSION_NODE} 1> /dev/null" >> ~/.bashrc
+# Install AWS Amplify
+RUN npm install -g @aws-amplify/cli --verbose
+
+# Set environment
+RUN echo "nvm use ${NODE_VERSION} 1> /dev/null" >> ~/.bashrc
 
 ENTRYPOINT [ "bash" ]
