@@ -54,7 +54,7 @@ Next we get into our new project and fix up Angular 6+ Support:
 
 ```
 $ cd amplify-app
-$ cat <<EOF > src/polyfills.ts
+$ cat <<EOF >> src/polyfills.ts
 (window as any).global = window;
 (window as any).process = {
   env: { DEBUG: undefined },
@@ -63,6 +63,8 @@ EOF
 ```
 
 Add Amplify backend:
+
+**IMPORTANT**: Make sure the `--host 0.0.0.0` argument is added to `ng serve` otherwise it will not be accessible from outside the Docker instance! This can later be changed in `pacakge.json` under `scripts` -> `start`.
 
 ```
 $ amplify init
@@ -76,7 +78,7 @@ Please tell us about your project
 ? Source Directory Path:  src
 ? Distribution Directory Path: dist/amplify-app
 ? Build Command:  npm run-script build
-? Start Command: ng serve
+? Start Command: ng serve --host 0.0.0.0
 Using default provider  awscloudformation
 
 For more information on AWS Profiles, see:
@@ -100,18 +102,3 @@ Start the frontend with:
 ```
 $ npm start
 ```
-
-**IMPORTANT**: When running on MacOS, the host needed to change from `localhost` to `0.0.0.0` because `localhost` in the container (the default `host`) has no route to it from the host operating system. The security warnings can be ignored because it's running in an isolated environment.
-
-Changing the start command permanently can be done by updating the `pacakge.json` file:
-
-```
-{
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve --host 0.0.0.0",
-    ...
-  }
-}
-```
-
