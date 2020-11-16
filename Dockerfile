@@ -43,6 +43,19 @@ EXPOSE 4200/tcp
 RUN mkdir -p ~/.aws
 VOLUME ~/.aws
 
+# Python 3.8 (for Lambda and other AWS coding)
+RUN yum -y install amazon-linux-extras
+RUN amazon-linux-extras enable python3.8
+RUN yum -y install python3.8
+
+# Python 3.8 / 2.7 as default Python to use. AL2 uses Python 2.7 out of the box.
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 2
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+
+# Python versions in use and default
+# RUN update-alternatives --list | grep python
+# RUN python -V
+
 ENTRYPOINT [ "bash" ]
 
 # For manual steps after this, refer to README.md
